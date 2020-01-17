@@ -4,6 +4,20 @@ const Projects = require('../data/helpers/projectModel');
 
 const router = express.Router();
 
+const requiredFields = [
+  'project_id',
+  'description',
+  'notes'
+];
+
+function checkMissingFields(reqBody) {
+  const reqBodyKeys = Object.keys(reqBody);
+  const missingFields = requiredFields.filter(field => {
+    return !reqBodyKeys.includes(field);
+  });
+  return missingFields;
+}
+
 router.get('/', (req, res) => {
   Actions.get()
     .then(actions => {
@@ -101,17 +115,10 @@ function validateActionId(req, res, next) {
 
 function validateAction(req, res, next) {
   if (Object.entries(req.body).length > 0) {
-    if (!req.body.project_id) {
+    const missingFields = checkMissingFields(req.body);
+    if (missingFields.length > 0) {
       res.status(400).json({
-        message: 'Missing required "project_id" field.'
-      });
-    } else if (!req.body.description) {
-      res.status(400).json({
-        message: 'Missing required "description" field.'
-      });
-    } else if (!req.body.notes) {
-      res.status(400).json({
-        message: 'Missing required "notes field.'
+        message: `Missing the following required field(s): ${missingFields.join(', ')}`
       });
     } else {
       next();
