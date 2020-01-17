@@ -23,14 +23,28 @@ router.get('/:id', (req, res) => {
       res.status(200).json(action);
     })
     .catch(error => {
+      console.log(error);
       res.status(500).json({
         error: 'Error retrieving action.'
-      })
+      });
+    });
+});
+
+router.post('/', validateProjectId, (req, res) => {
+  Actions.insert(req.body)
+    .then(action => {
+      res.status(201).json(action);
+    })  
+    .catch(error => {
+      console.log(error);
+      res.status(500).json({
+        error: 'Error saving action.'
+      });
     })
 })
 
 function validateProjectId(req, res, next) {
-  const id = req.params.id;
+  const id = req.body.project_id;
   Projects.get(id)
     .then(project => {
       if (project) {
