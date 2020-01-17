@@ -41,4 +41,23 @@ router.post('/', (req, res) => {
     });
 });
 
+router.put('/:id', (req, res) => {
+  const id = req.params.id;
+  const updatedProject = {
+    id: id,
+    name: req.body.name,
+    description: req.body.description
+  };
+  Projects.update(id, updatedProject)
+    .then(project => {
+      res.status(200).json(project);
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).json({
+        error: 'Error updating project.'
+      });
+    });
+});
+
 module.exports = router;
