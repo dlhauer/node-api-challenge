@@ -40,13 +40,23 @@ Demonstrate your understanding of this Sprint's concepts by answering the follow
 
 - [ ] Mention two parts of Express that you learned about this week.
 
+We learned about the `.Router()` method, which, as the name suggests, returns a `router` object with all of the HTTP utility methods we need, as well as the homies, `req` and `res`. The homies are objects provided by Express which allow us to communicate with the client.
+
 - [ ] Describe Middleware?
+
+Middleware are functions that execute when a request is made to the Express server. We can chain together a bunch of middleware functions to improve the readability and reusability of our code.
 
 - [ ] Describe a Resource?
 
+According to REST principles, a resource is anything stored on our server.
+
 - [ ] What can the API return to help clients know if a request was successful?
 
+The API can return a helpful HTTP status code, such as `200 Ok` or `201 Created`.
+
 - [ ] How can we partition our application into sub-applications?
+
+We can do this by using `express.Router()` and saving routes in separate files.
 
 ## Minimum Viable Product
 
