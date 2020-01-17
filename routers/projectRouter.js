@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', validateProjectId, (req, res) => {
   Projects.get(req.params.id)
     .then(project => {
       res.status(200).json(project);
@@ -28,7 +28,7 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.post('/', (req, res) => {
+router.post('/', validateProject, (req, res) => {
   Projects.insert(req.body)
     .then(project => {
       res.status(201).json(project);
@@ -41,14 +41,9 @@ router.post('/', (req, res) => {
     });
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', validateProjectId, validateProject, (req, res) => {
   const id = req.params.id;
-  const updatedProject = {
-    id: id,
-    name: req.body.name,
-    description: req.body.description
-  };
-  Projects.update(id, updatedProject)
+  Projects.update(id, req.body)
     .then(project => {
       res.status(200).json(project);
     })
@@ -60,7 +55,7 @@ router.put('/:id', (req, res) => {
     });
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', validateProjectId, (req, res) => {
   const id = req.params.id;
   Projects.remove(id)
     .then(() => {
@@ -72,5 +67,39 @@ router.delete('/:id', (req, res) => {
       });
     });
 });
+
+function validateProjectId(req, res, next) {
+  const id = req.params.id;
+  Projects.get(id)
+    .then(project => {
+      if (project) {
+        next();
+      } else {
+        res.status(404).json({
+          message: 'Invalid project ID.'
+        });
+      }
+    });
+}
+
+function validateProject(req, res, next) {
+  if (Object.entries(req.body).length > 0) {
+    if (!req.body.name) {
+      res.status(400).json({
+        message: 'Missing required "name" field.'
+      });
+    } else if (!req.body.description) {
+      res.status(400).json({
+        message: 'Missing required "description" field.'
+      });
+    } else {
+      next();
+    }
+  } else {
+    res.status(400).json({
+      message: 'Missing project data.'
+    })
+  }
+}
 
 module.exports = router;
