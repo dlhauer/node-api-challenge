@@ -40,8 +40,22 @@ router.post('/', validateProjectId, (req, res) => {
       res.status(500).json({
         error: 'Error saving action.'
       });
+    });
+});
+
+router.put('/:id', validateProjectId, (req, res) => {
+  const id = req.params.id;
+  Actions.update(id, req.body)
+    .then(action => {
+      res.status(200).json(action);
     })
-})
+    .catch(error => {
+      console.log(error);
+      res.status(500).json({
+        error: 'Error updating action.'
+      });
+    });
+});
 
 function validateProjectId(req, res, next) {
   const id = req.body.project_id;
