@@ -57,6 +57,20 @@ router.put('/:id', validateProjectId, (req, res) => {
     });
 });
 
+router.delete('/:id', (req, res) => {
+  const id = req.params.id;
+  Actions.remove(id)
+    .then(() => {
+      res.status(200).json(id);
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).json({
+        error: 'Error deleting action.'
+      });
+    });
+});
+
 function validateProjectId(req, res, next) {
   const id = req.body.project_id;
   Projects.get(id)
