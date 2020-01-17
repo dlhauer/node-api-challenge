@@ -28,6 +28,19 @@ router.get('/:id', validateProjectId, (req, res) => {
     });
 });
 
+router.get('/:id/actions', validateProjectId, (req, res) => {
+  Projects.get(req.params.id)
+    .then(project => {
+      res.status(200).json(project.actions);
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).json({
+        error: 'Error retrieving project.'
+      });
+    });
+});
+
 router.post('/', validateProject, (req, res) => {
   Projects.insert(req.body)
     .then(project => {
