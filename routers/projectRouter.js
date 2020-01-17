@@ -29,9 +29,9 @@ router.get('/:id', validateProjectId, (req, res) => {
 });
 
 router.get('/:id/actions', validateProjectId, (req, res) => {
-  Projects.get(req.params.id)
-    .then(project => {
-      res.status(200).json(project.actions);
+  Projects.getProjectActions(req.params.id)
+    .then(actions => {
+      res.status(200).json(actions);
     })
     .catch(error => {
       console.log(error);
