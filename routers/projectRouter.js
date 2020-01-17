@@ -60,4 +60,17 @@ router.put('/:id', (req, res) => {
     });
 });
 
+router.delete('/:id', (req, res) => {
+  const id = req.params.id;
+  Projects.remove(id)
+    .then(() => {
+      res.status(200).json(id);
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: 'Error deleting project'
+      });
+    });
+});
+
 module.exports = router;
